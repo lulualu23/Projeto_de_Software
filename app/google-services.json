@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "212585261759",
+    "project_id": "brewck-50fdd",
+    "storage_bucket": "brewck-50fdd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212585261759:android:700a68d34f6466a986f40a",
+        "android_client_info": {
+          "package_name": "com.example.brewck"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-BVQROOvwbGfdlacQUdmtlZhS2HsIpew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
