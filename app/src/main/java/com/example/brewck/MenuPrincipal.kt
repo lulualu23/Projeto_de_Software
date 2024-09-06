@@ -79,26 +79,50 @@ class MenuPrincipal : AppCompatActivity() {
             val intent = Intent(this, Configuracoes::class.java)
             startActivity(intent)
         }
+    }
 
-        repository.pegarEmail { email ->
-            if (email != null) {
-                repository.buscarUserKegInfo(email) { userKegInfo ->
-                    if (userKegInfo != null) {
-                        txtBarrisCheios.text = "Barris Cheios: ${userKegInfo.barrisCheios}"
-                        txtBarrisSujos.text = "Barris Sujos: ${userKegInfo.barrisSujos}"
-                        txtBarrisCliente.text = "Barris no Cliente: ${userKegInfo.barrisNoCliente}"
-                        txtBarrisLimpos.text = "Barris Limpos: ${userKegInfo.barrisLimpos}"
-                    } else {
-                        println("Usuário não encontrado ou dados não disponíveis.")
-                    }
-                }
-            } else {
-                println("Usuário não autenticado.")
-                // Trate o caso em que não há usuário autenticado, se necessário
-            }
+    override fun onResume() {
+        super.onResume()
+        atualizarContagens()
+    }
+
+    private fun atualizarContagens() {
+        contarBarrisPorStatus("Cheio") { count ->
+            txtBarrisCheios.text = "Barris Cheios: $count"
         }
 
+        contarBarrisPorStatus("Sujo") { count ->
+            txtBarrisSujos.text = "Barris Sujos: $count"
+        }
 
+        contarBarrisPorStatus("Limpo") { count ->
+            txtBarrisLimpos.text = "Barris Limpos: $count"
+        }
+
+        contarBarrisPorStatus("No Cliente") { count ->
+            txtBarrisCliente.text = "Barris no Cliente: $count"
+        }
+    }
+
+    private fun contarBarrisPorStatus(status: String, onResult: (Int) -> Unit) {
+        val email = FirebaseAuth.getInstance().currentUser?.email
+        if (email != null) {
+            firestore.collection("barris")
+                .whereEqualTo("email", email)
+                .whereEqualTo("status", status)
+                .get()
+                .addOnSuccessListener { result ->
+                    val count = result.size()
+                    onResult(count)
+                }
+                .addOnFailureListener { exception ->
+                    Toast.makeText(this, "Erro ao contar barris: ${exception.message}", Toast.LENGTH_SHORT).show()
+                    onResult(0)
+                }
+        } else {
+            Toast.makeText(this, "Usuário não autenticado.", Toast.LENGTH_SHORT).show()
+            onResult(0)
+        }
     }
 
     private fun deslogarUsuario() {

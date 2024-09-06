@@ -120,6 +120,7 @@
     <Button
         android:id="@+id/btnEntrar"
         style="@style/brewck_button"
+        android:layout_marginBottom="20dp"
         android:text="ENTRAR"
         android:textColor="#FFFFFF"
         app:cornerRadius="10dp"
